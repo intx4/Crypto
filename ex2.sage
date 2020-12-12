@@ -121,9 +121,10 @@ def unshiftRightL(x, l):
 
 def unshiftLeft(x, shift, mask):
     i = 1
-    m = (1 << shift) -1
+    m = (1 << shift) -1 #creates a bit mask of all ones of lenght shift: 0...0 + 1*shift for total of 128 bits
+    # we start with shift bits of the original input exposed. At the end of the first iteration, we will
     while i * shift < 128:
-        partmask = mask & (m << (shift * i))
+        partmask = mask & (m << (shift * i)) #each time we will take only a window of size shift of the mask.The windows slides of shift bits towards left each iteration. Example 1st iter: if mask is BB...BB 128 bits we will take 0*(128-2shift) | B*shift) | 0*shift for 128 bits.By doing an and with the shifted value and xoring we will expose the next shift bits of the original input.
         x = x^^((x << shift) & partmask)
         i += 1
     return x
